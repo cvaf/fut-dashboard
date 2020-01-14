@@ -11,17 +11,15 @@ import dash_core_components as dcc
 import dash_html_components as html
 import pandas as pd
 import numpy as np
-from datetime import datetime, timedelta
 import plotly.graph_objs as go
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 server = app.server
-app.title = 'FUT Prices and Performance'
+app.title = 'FUT Dashboard'
 
-df = pd.read_csv('dash_groupedplayers_dataframe.csv', 
-                 index_col='Unnamed: 0', parse_dates=['date', 'added_date'])
+df = pd.read_pickle('data/fifa20_dash.pkl')
 
 countries = [dict(label=str(c), value=str(c)) for c in df.nationality.unique()]
 leagues = [dict(label=str(l), value=str(l)) for l in df.league.unique()]
@@ -34,7 +32,7 @@ app.layout = html.Div([
     # Title
     html.Div([
         html.H1(
-            'FUT Prices and Performance',
+            'FUT Dashboard',
             className= 'eight columns',
             style={'text-align': 'left'}
             ),
@@ -107,20 +105,37 @@ app.layout = html.Div([
     # Separator
     html.Hr(style={'margin': '0', 'margin-bottom': '5'}),
 
+
+    # price slider
     html.Div([
         html.P("Move this slider to narrow down the prices:"),
         dcc.RangeSlider(
             id='prices',
-            marks={i: '{}'.format(10**i) for i in range(1, 5)},
+            min=1,
             max=4.5,
+            step=0.1,
             value=[2.3, 2.7],
-            dots=False,
-            step=.01,
-            updatemode='drag'
-            )],
-        className='row',
-        style={'margin-bottom': '40'}
+            marks={'1': '10K', '2': '100K', '3': '1M', '4': '10M'})
+        ],
+    className='row',
+    style={'margin-bottom': '80'}
     ),
+
+
+    # # price slider
+    # html.Div([
+    #     html.P("Move this slider to narrow down the prices:"),
+    #     dcc.RangeSlider(
+    #         id='prices',
+    #         min=1,
+    #         max=4.5,
+    #         step=0.1,
+    #         value=[2.3, 2.7],
+    #         marks={str(i): str(10**i) + 'K' for i in range(1,5)})
+    #     ],
+    # className='row',
+    # style={'margin-bottom': '80'}
+    # ),
 
 
     dcc.Graph(id='graph-with-dropdowns'),
