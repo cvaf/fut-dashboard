@@ -324,11 +324,11 @@ if __name__ == '__main__':
         df = update_df(df)
         print('Finished updating dataframe.')
 
-    df.to_pickle('data/fifa20.pkl')
+    df.to_pickle('data/fifa20.pkl', protocol=4)
     print('Saved the dataframe.\n')
 
     df = processing(df)
     print('Finished processing the dataframe.')
 
-    df.to_pickle('data/fifa20_dash.pkl')
+    df.to_pickle('data/fifa20_dash.pkl', protocol=4)
     print('Saved the processed dataframe.\n')
